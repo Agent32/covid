@@ -27,12 +27,13 @@ const MainCountryListDrawer = (props: countriesListConectedType) => {
   const [listNumb, setListNumb] = useState<number>(1);
   const [listDeath, setListDeath] = useState<number>(1);
   const [listRecovered, setListRecovered] = useState<number>(1);
+  const [listName, setlistName] = useState<string>('');
 
   const popWindow = () => {
     return (
       <div className={countryListStyle.popGeneral}>
         <div className={countryListStyle.popWindow}>
-          <h3> Country</h3>
+          <h3> {listName}</h3>
           <div> Total Confirmed: {listNumb} </div>
           <div> Total Death:  {listDeath} </div>
           <div> Total Recovered:  {listRecovered} </div>
@@ -77,6 +78,7 @@ const MainCountryListDrawer = (props: countriesListConectedType) => {
       <div className={countryListStyle.column} key={current.ID}
         onClick={() => {
           setWindowsStatus(true)
+          setlistName(current.Country)
           setListNumb(current.TotalConfirmed)
           setListDeath(current.TotalDeaths)
           setListRecovered(current.TotalRecovered)
