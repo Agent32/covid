@@ -1,6 +1,6 @@
-import { ReactElement, useEffect } from "react";
+import { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { serverAL } from "../../../api/api";
+import { sortCountriesData } from "../../../store/actions/countryListActions";
 import { getCountriesListTC } from "../../../store/countryListReducer";
 import { globalStateType } from "../../../store/store";
 import MainCountryListDrawer from './mainCountryListDrawer'
@@ -12,14 +12,14 @@ const mapStateToProps = (state: globalStateType) => {
   }
 };
 
-const connector = connect(mapStateToProps, {getCountriesListTC})
+const connector = connect(mapStateToProps, { getCountriesListTC, sortCountriesData })
 export type countriesListConectedType = ConnectedProps<typeof connector>
 
 function MainCountryListContainerConnect(props: countriesListConectedType) {
 
-    useEffect(() => {
-      props.getCountriesListTC();
-    }, []); 
+  useEffect(() => {
+    props.getCountriesListTC();
+  }, []);
 
 
 

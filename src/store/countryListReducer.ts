@@ -1,9 +1,11 @@
-import { useDispatch } from 'react-redux'
-import { mainCountryListType } from './types/storeTypes'
-import { orderBy } from 'lodash/fp';
+
+import { mainCountryListType, countriesStatCovidType } from './types/storeTypes'
+
 import * as actions from './actions/countryListActions'
 import { Dispatch } from 'react'
 import { serverAL } from '../api/api'
+const _ = require("lodash");
+
 type getOnlyActionTypes<T> = T extends { [key: string]: infer U } ? U : never
 type ActionTypesM = ReturnType<getOnlyActionTypes<typeof actions>>
 
@@ -29,6 +31,8 @@ const init: mainCountryListType = {
   },
 }
 // ========================================
+//const answ= _(state.Countries).sortBy((c:countriesStatCovidType) =>c.ID, 'desc')
+//
 function countryListReducer(
   state: mainCountryListType = init,
   action: ActionTypesM
@@ -43,15 +47,13 @@ function countryListReducer(
       }
     }
     case 'SORT-COUNTIES-DATA/countryCovidPage': {
-
-      if (action.sort === 'country') {
-     const answ = state.
-       }
+      const answ = _(state.Countries).orderBy((c:any) =>c[action.whatSort] , action.direction).value()
       return {
         ...state,
-        Countries: [],
+        Countries: [...answ],
       }
     }
+ 
 
     // --------------
     default:
@@ -61,14 +63,15 @@ function countryListReducer(
 // ========================================
 
 // ========================================
-export const getCountriesListTC = () => async (dispatch: Dispatch<ActionTypesM>) => {
-  try {
-    const newsAnswData = await serverAL.getCountiesCovidList();
-    dispatch(actions.setCountriesChange(newsAnswData));
-  } catch (err) {
-    console.log(err);
+export const getCountriesListTC =
+  () => async (dispatch: Dispatch<ActionTypesM>) => {
+    try {
+      const newsAnswData = await serverAL.getCountiesCovidList()
+      dispatch(actions.setCountriesChange(newsAnswData))
+    } catch (err) {
+      console.log(err)
+    }
   }
-};
 // ---------------------------------------
 /* export const sendNewInvoiceTC = (data: invoiceType) => async (dispatch: ActionTypesM) => {
   try {

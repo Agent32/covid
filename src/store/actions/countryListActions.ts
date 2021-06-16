@@ -6,7 +6,10 @@ export const setCountriesChange = (data:Array <countriesStatCovidType>) => ({
 }as const)
 // --------------
 
-export const sortCountriesData = (sort:'country'|'confirmed') => ({
+
+export const sortCountriesData = (whatSort:'Country'|'TotalConfirmed', direction:'asc'|'desc') => ({
   type: 'SORT-COUNTIES-DATA/countryCovidPage',
-  sort
+  whatSort,
+  direction
 }as const)
+

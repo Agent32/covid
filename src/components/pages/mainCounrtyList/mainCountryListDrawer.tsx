@@ -3,6 +3,8 @@ import countryListStyle from "./countryListStyle.module.scss";
 import { countriesListConectedType } from "./mainCountryListContainer";
 import { Field, InjectedFormProps, reduxForm } from 'redux-form'
 import { inputCondition } from "../../formSettings";
+import React, { useState } from "react";
+const _ = require("lodash");
 
 const maxLength20 = inputCondition.maxLength(20);
 const minLength1 = inputCondition.minLength(1);
@@ -11,47 +13,85 @@ const MainCountryListDrawer = (props: countriesListConectedType) => {
 
 
 
-  //-----------------Form------------------------ 
-  const SimpleForm = (props: InjectedFormProps) => {
-    const { handleSubmit, pristine, reset, submitting } = props
+  //-------------------------sort--------------------------------
+  type switchType = 'asc' | 'desc'
+  const [sort, setSort] = useState<switchType>('desc');
+
+  const changeSort = () => {
+    sort === 'asc' ? setSort('desc') : setSort('asc')
+  }
+  //-------------------------/sort--------------------------------
+  //-------------------------PopUpWindow--------------------------------
+
+  const [isWindowOpen, setWindowsStatus] = useState<boolean>(false);
+  const [listNumb, setListNumb] = useState<number>(1);
+  const [listDeath, setListDeath] = useState<number>(1);
+  const [listRecovered, setListRecovered] = useState<number>(1);
+
+  const popWindow = () => {
     return (
-      <form onSubmit={handleSubmit}>
-        <span>
-          <Field name="firstName" className={countryListStyle.searchField} component="input" type="text" placeholder="Search" validate={[minLength1, maxLength20]} />
-        </span> </form>
+      <div className={countryListStyle.popGeneral}>
+        <div className={countryListStyle.popWindow}>
+          <h3> Country</h3>
+          <div> Total Confirmed: {listNumb} </div>
+          <div> Total Death:  {listDeath} </div>
+          <div> Total Recovered:  {listRecovered} </div>
+          <button autoFocus={true} onClick={() => setWindowsStatus(false)}> OK </button>
+        </div>
+      </div>
     )
   }
 
-  const ContactForm = reduxForm({
-    form: 'simple'
-  })(SimpleForm)
-  //----------------------------------------- 
-  const test = (a: any) => { alert(a.firstName) }
-  //----------------------------------------- 
+  //-------------------------/PopUpWindow--------------------------------
 
-
-  const drawFullData =(confirmed:number, death:number, recovered:number) =>
-  {
-    alert (`${confirmed}, ${death}, ${recovered}`)
-  }
-
+  //-------------------------drawers--------------------------------
   const TitleDrawer = () => (
     <div className={countryListStyle.title}>
-      <span className={countryListStyle.numb}> №</span>  <span className={countryListStyle.countr} >Country</span>  <span className={countryListStyle.confirm}> Total Confirmed </span>
+      <span className={countryListStyle.numb}> №</span>  <span
+        className={countryListStyle.countr}
+        onClick={() => {
+          props.sortCountriesData("Country", sort)
+          changeSort()
+        }} >Country</span>
+      <span
+        className={countryListStyle.confirm}
+        onClick={() => {
+          props.sortCountriesData("TotalConfirmed", sort)
+          changeSort()
+        }}
+      > Total Confirmed </span>
     </div>
   );
-  const listCountryDrawer = props.Countries.map((current, count) => {
+
+  //-----------------------------------searchPart--------------------------------------
+  const [inputForSort, setInputForSort] = useState<string>('');
+  let inputArea = React.createRef<HTMLInputElement>();
+  let tempHolder = props.Countries
+  if (inputForSort === '') { tempHolder = props.Countries }
+  else {
+    tempHolder = _(props.Countries).filter((c: any) => c.Country.toLowerCase().includes(inputForSort.toLowerCase())).value()
+  }
+  //-----------------------------------/searchPart--------------------------------------
+  const listCountryDrawer = tempHolder.map((current, count) => {
     return (
-      <div className={countryListStyle.column} key={current.ID} onClick={()=>{drawFullData(current.TotalConfirmed, current.TotalDeaths, current.TotalRecovered)}}>
-        <span className={countryListStyle.numb}> {++count} </span> <span className={countryListStyle.countr}>{current.Country}</span>  <span className={countryListStyle.confirm}>{current.TotalConfirmed}</span>
+      <div className={countryListStyle.column} key={current.ID}
+        onClick={() => {
+          setWindowsStatus(true)
+          setListNumb(current.TotalConfirmed)
+          setListDeath(current.TotalDeaths)
+          setListRecovered(current.TotalRecovered)
+        }}>
+        <span className={countryListStyle.numb}> {++count} </span>
+        <span className={countryListStyle.countr}>{current.Country}</span>
+        <span className={countryListStyle.confirm}>{current.TotalConfirmed}</span>
       </div >
     )
   })
-
+  //-------------------------/drawers--------------------------------
 
   return (
     <div className={countryListStyle.main}>
-
+      {isWindowOpen ? popWindow() : null}
 
       <div className={countryListStyle.heading}>
         <div>
@@ -59,7 +99,13 @@ const MainCountryListDrawer = (props: countriesListConectedType) => {
           <h1>STATISTIC</h1>
         </div>
         <div>
-          <ContactForm onSubmit={test} />
+          <input
+            ref={inputArea}
+            onChange={() => inputArea.current !== null ? setInputForSort(inputArea.current.value) : ''}
+            value={inputForSort}
+            type="text"
+            placeholder="Search"
+          />
         </div>
       </div>
 
