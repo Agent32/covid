@@ -2,6 +2,7 @@
 import countryListStyle from "./countryListStyle.module.scss";
 import { countriesListConectedType } from "./mainCountryListContainer";
 import { Field, InjectedFormProps, reduxForm } from 'redux-form'
+import { InputGroup, FormControl } from 'react-bootstrap'; 
 import { inputCondition } from "../../formSettings";
 import React, { useState } from "react";
 const _ = require("lodash");
@@ -11,7 +12,7 @@ const minLength1 = inputCondition.minLength(1);
 
 const MainCountryListDrawer = (props: countriesListConectedType) => {
 
-
+  
 
   //-------------------------sort--------------------------------
   type switchType = 'asc' | 'desc'
@@ -71,7 +72,7 @@ const MainCountryListDrawer = (props: countriesListConectedType) => {
   if (inputForSort === '') { tempHolder = props.Countries }
   else {
     tempHolder = _(props.Countries).filter((c: any) => c.Country.toLowerCase().includes(inputForSort.toLowerCase())).value()
-  }
+  } 
   //-----------------------------------/searchPart--------------------------------------
   const listCountryDrawer = tempHolder.map((current, count) => {
     return (
@@ -88,7 +89,7 @@ const MainCountryListDrawer = (props: countriesListConectedType) => {
         <span className={countryListStyle.confirm}>{current.TotalConfirmed}</span>
       </div >
     )
-  })
+  }) 
   //-------------------------/drawers--------------------------------
 
   return (
@@ -108,6 +109,16 @@ const MainCountryListDrawer = (props: countriesListConectedType) => {
             type="text"
             placeholder="Search"
           />
+   <InputGroup className="mb-3">
+    <InputGroup.Prepend>
+      <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+    </InputGroup.Prepend>
+    <FormControl
+      placeholder="Username"
+      aria-label="Username"
+      aria-describedby="basic-addon1"
+    />
+  </InputGroup>
         </div>
       </div>
 
