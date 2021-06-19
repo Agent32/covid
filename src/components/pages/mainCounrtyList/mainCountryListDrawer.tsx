@@ -5,6 +5,7 @@ import { Field, InjectedFormProps, reduxForm } from 'redux-form'
 import { InputGroup, FormControl } from 'react-bootstrap'; 
 import { inputCondition } from "../../formSettings";
 import React, { useState } from "react";
+
 const _ = require("lodash");
 
 const maxLength20 = inputCondition.maxLength(20);
@@ -102,27 +103,24 @@ const MainCountryListDrawer = (props: countriesListConectedType) => {
           <h1>STATISTIC</h1>
         </div>
         <div>
-          <input
-            ref={inputArea}
-            onChange={() => inputArea.current !== null ? setInputForSort(inputArea.current.value) : ''}
-            value={inputForSort}
-            type="text"
-            placeholder="Search"
-          />
+     
    <InputGroup className="mb-3">
     <InputGroup.Prepend>
-      <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+      <InputGroup.Text id="basic-addon1">🔎</InputGroup.Text>
     </InputGroup.Prepend>
     <FormControl
-      placeholder="Username"
-      aria-label="Username"
-      aria-describedby="basic-addon1"
+      placeholder="Search"
+      aria-label="Search"
+              aria-describedby="Input text to search"
+              ref={inputArea}
+              value={inputForSort}
+              onChange={() => inputArea.current !== null ? setInputForSort(inputArea.current.value) : ''}
     />
   </InputGroup>
         </div>
       </div>
 
-
+   
 
       <div className={countryListStyle.table}>
 

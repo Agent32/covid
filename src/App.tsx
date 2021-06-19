@@ -1,7 +1,7 @@
 import "./App.css";
 import MainCountryListContainer from "./components/pages/mainCounrtyList/mainCountryListContainer";
 import { Route, Switch, Redirect } from "react-router-dom";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
